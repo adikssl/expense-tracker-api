@@ -14,3 +14,5 @@ export type RequestWithBodyAndQuery<B, Q> = Request<
   B,
   Q
 >;
+
+export type RequestWithParamsAndBody<P, B> = Request<P, unknown, B>;

@@ -1,14 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodType } from "zod";
 
-export const validate = (schema: ZodType) => {
+type ValidateTarget = "body" | "params" | "query";
+
+export const validate = (schema: ZodType, target: ValidateTarget = "body") => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const result = schema.safeParse(req.body);
+    const result = schema.safeParse(req[target]);
     if (!result.success) {
       next(result.error);
       return;
     }
-    req.body = result.data;
+    req[target] = result.data;
     next();
   };
 };
