@@ -168,8 +168,11 @@ walletRouter.patch(
     req: RequestWithParamsAndBody<{ id: string }, UpdateWalletInput>,
     res: Response,
   ) => {
-    const id = Number(req.params.id);
-    const result = await walletService.updateWallet(id, req.userId, req.body);
+    const result = await walletService.updateWallet(
+      Number(req.params.id),
+      req.userId,
+      req.body,
+    );
     res.status(200).json(result);
   },
 );
