@@ -6,6 +6,7 @@ import { swaggerSpec } from "./config/swagger";
 import { authMiddleware } from "./middleware/auth.middleware";
 import { errorHandler } from "./middleware/errorHandler";
 import { authRouter } from "./modules/auth/auth.router";
+import { categoryRouter } from "./modules/category/category.router";
 import { walletRouter } from "./modules/wallet/wallet.router";
 import type {} from "./types/express";
 
@@ -19,6 +20,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/auth", authRouter);
 app.use("/wallets", authMiddleware, walletRouter);
+app.use("/categories", authMiddleware, categoryRouter);
 app.use(errorHandler);
 
 export default app;
