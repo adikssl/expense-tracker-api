@@ -66,7 +66,7 @@ categoryRouter.get(
   validate(CategoryIdParamsSchema, "params"),
   async (req: RequestWithParams<{ id: string }>, res: Response) => {
     const result = await categoryService.findCategoryById(
-      Number(req.params.id),
+      +req.params.id,
       req.userId,
     );
     res.status(200).json(result);
@@ -163,7 +163,7 @@ categoryRouter.patch(
   ) => {
     const result = await categoryService.updateCategory(
       req.body,
-      Number(req.params.id),
+      +req.params.id,
       req.userId,
     );
     res.status(200).json(result);
@@ -200,8 +200,7 @@ categoryRouter.delete(
   "/:id",
   validate(CategoryIdParamsSchema, "params"),
   async (req: RequestWithParams<{ id: string }>, res: Response) => {
-    const id = Number(req.params.id);
-    await categoryService.deleteCategory(id, req.userId);
+    await categoryService.deleteCategory(+req.params.id, req.userId);
     res.status(204).send();
   },
 );

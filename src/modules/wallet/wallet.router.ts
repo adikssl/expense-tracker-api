@@ -66,7 +66,7 @@ walletRouter.get(
   validate(walletIdParamsSchema, "params"),
   async (req: RequestWithParams<{ id: string }>, res: Response) => {
     const result = await walletService.findWalletById(
-      Number(req.params.id),
+      +req.params.id,
       req.userId,
     );
     res.status(200).json(result);
@@ -169,7 +169,7 @@ walletRouter.patch(
     res: Response,
   ) => {
     const result = await walletService.updateWallet(
-      Number(req.params.id),
+      +req.params.id,
       req.userId,
       req.body,
     );
@@ -207,8 +207,7 @@ walletRouter.delete(
   "/:id",
   validate(walletIdParamsSchema, "params"),
   async (req: RequestWithParams<{ id: string }>, res: Response) => {
-    const id = Number(req.params.id);
-    await walletService.deleteWallet(id, req.userId);
+    await walletService.deleteWallet(+req.params.id, req.userId);
     res.status(204).send();
   },
 );
