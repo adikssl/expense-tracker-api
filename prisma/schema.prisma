@@ -55,16 +55,23 @@ model Wallet {
   transactions Transaction[]
 }
 
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
 model Transaction {
-  id         Int       @id @default(autoincrement())
-  amount     Decimal   @db.Decimal(10, 2)
-  createdAt  DateTime  @default(now())
-  categoryId Int?
-  category   Category? @relation(fields: [categoryId], references: [id])
-  walletId   Int
-  wallet     Wallet    @relation(fields: [walletId], references: [id])
-  userId     Int
-  user       User      @relation(fields: [userId], references: [id])
+  id          Int             @id @default(autoincrement())
+  amount      Decimal         @db.Decimal(10, 2)
+  type        TransactionType
+  description String?
+  createdAt   DateTime        @default(now())
+  categoryId  Int?
+  category    Category?       @relation(fields: [categoryId], references: [id])
+  walletId    Int
+  wallet      Wallet          @relation(fields: [walletId], references: [id])
+  userId      Int
+  user        User            @relation(fields: [userId], references: [id])
 
   relatedTransactionId Int?         @unique
   relatedTransaction   Transaction? @relation("TransactionPair", fields: [relatedTransactionId], references: [id])
