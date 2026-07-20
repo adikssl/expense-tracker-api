@@ -1,4 +1,4 @@
-import { z } from "zod";
+import z from "zod";
 
 export const registerSchema = z.object({
   email: z.email(),
@@ -15,4 +15,8 @@ export const loginSchema = z.object({
     .string()
     .min(6, "password must be at least 6 characters long")
     .max(50),
+});
+
+export const refreshTokenSchema = z.object({
+  refreshToken: z.string().optional(),
 });

@@ -10,14 +10,15 @@ datasource db {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  email        String        @unique
-  name         String
-  password     String
-  createdAt    DateTime      @default(now())
-  categories   Category[]
-  transactions Transaction[]
-  wallets      Wallet[]
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  name          String
+  password      String
+  createdAt     DateTime       @default(now())
+  categories    Category[]
+  transactions  Transaction[]
+  wallets       Wallet[]
+  refreshTokens RefreshToken[]
 }
 
 enum CategoryType {
@@ -76,4 +77,14 @@ model Transaction {
   relatedTransactionId Int?         @unique
   relatedTransaction   Transaction? @relation("TransactionPair", fields: [relatedTransactionId], references: [id])
   pairedWith           Transaction? @relation("TransactionPair")
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revoked   Boolean  @default(false)
 }
