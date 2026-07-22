@@ -9,6 +9,10 @@ export const CategoryIdParamsSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
 
+export const getCategoriesQuerySchema = z.object({
+  type: z.enum(["INCOME", "EXPENSE"]).optional(),
+});
+
 export const UpdateCategorySchema = CreateCategorySchema.partial().omit({
   type: true,
 });

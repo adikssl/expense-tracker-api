@@ -10,7 +10,11 @@ export const validate = (schema: ZodType, target: ValidateTarget = "body") => {
       next(result.error);
       return;
     }
-    req[target] = result.data;
+    if (target === "query") {
+      req.validatedQuery = result.data;
+    } else {
+      req[target] = result.data;
+    }
     next();
   };
 };
