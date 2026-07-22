@@ -1,3 +1,4 @@
+import { CategoryType } from "../../generated/prisma/enums";
 import { categoryRepository } from "./category.repository";
 import { CreateCategoryInput, UpdateCategoryInput } from "./category.types";
 
@@ -12,8 +13,8 @@ export const categoryService = {
     }
     return category;
   },
-  async findCategoriesByUserId(userId: number) {
-    return await categoryRepository.findCategoriesByUserId(userId);
+  async findCategoriesByUserId(userId: number, type?: CategoryType) {
+    return await categoryRepository.findCategoriesByUserId(userId, type);
   },
   async createCategory(data: CreateCategoryInput, userId: number) {
     return categoryRepository.createCategory({ ...data }, userId);

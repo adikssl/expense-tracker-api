@@ -8,10 +8,15 @@ import {
 import {
   CategoryIdParamsSchema,
   CreateCategorySchema,
+  getCategoriesQuerySchema,
   UpdateCategorySchema,
 } from "./category.schema";
 import { categoryService } from "./category.service";
-import { CreateCategoryInput, UpdateCategoryInput } from "./category.types";
+import {
+  CreateCategoryInput,
+  GetCategoriesQuery,
+  UpdateCategoryInput,
+} from "./category.types";
 
 export const categoryRouter = express.Router();
 
@@ -30,10 +35,19 @@ export const categoryRouter = express.Router();
  *         description: Unauthorized
  */
 
-categoryRouter.get("/", async (req: Request, res: Response) => {
-  const result = await categoryService.findCategoriesByUserId(req.userId);
-  res.status(200).json(result);
-});
+categoryRouter.get(
+  "/",
+  validate(getCategoriesQuerySchema, "query"),
+  async (req: Request, res: Response) => {
+    const query = req.validatedQuery as GetCategoriesQuery;
+    console.log(typeof query.type, query.type);
+    const result = await categoryService.findCategoriesByUserId(
+      req.userId,
+      query.type,
+    );
+    res.status(200).json(result);
+  },
+);
 
 /**
  * @swagger
