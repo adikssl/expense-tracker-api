@@ -24,6 +24,5 @@ services:
     depends_on:
       - db
 
-# Объявляем volume для базы данных
 volumes:
   pgdata:
