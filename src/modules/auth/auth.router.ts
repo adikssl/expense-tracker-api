@@ -155,7 +155,7 @@ authRouter.post(
   ) => {
     try {
       const cookies = req.cookies as Record<string, string | undefined>;
-      const rawToken = req.body.refreshToken ?? cookies.refreshToken;
+      const rawToken = req.body?.refreshToken ?? cookies.refreshToken;
       const { accessToken, refreshToken } =
         await authService.refreshAccessToken(rawToken);
       res.cookie("refreshToken", refreshToken, REFRESH_COOKIE_OPTIONS);
@@ -203,7 +203,7 @@ authRouter.post(
   ) => {
     try {
       const cookies = req.cookies as Record<string, string | undefined>;
-      const rawToken = req.body.refreshToken ?? cookies.refreshToken;
+      const rawToken = req.body?.refreshToken ?? cookies.refreshToken;
       await authService.logout(rawToken);
       res.clearCookie("refreshToken");
       res.status(200).json({ message: "Logged out" });
