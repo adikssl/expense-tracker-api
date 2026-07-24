@@ -3,6 +3,7 @@ import { walletService } from "../wallet/wallet.service";
 import { transactionRepository } from "./transaction.repository";
 import {
   CreateTransactionInput,
+  GetTransactionsQuery,
   UpdateTransactionInput,
 } from "./transaction.types";
 
@@ -17,8 +18,19 @@ export const transactionService = {
     }
     return transaction;
   },
-  async findTransactionsByUserId(userId: number) {
-    return await transactionRepository.findTransactionsByUserId(userId);
+  async findTransactionsByUserId(userId: number, query: GetTransactionsQuery) {
+    const { data, total } =
+      await transactionRepository.findTransactionsByUserId(userId, query);
+    const { page, limit } = query;
+    const totalPages = Math.ceil(total / limit);
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        totalPages,
+      },
+    };
   },
   async createTransaction(data: CreateTransactionInput, userId: number) {
     await walletService.findWalletById(data.walletId, userId);

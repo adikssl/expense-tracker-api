@@ -7,12 +7,14 @@ import {
 } from "../../types/request-types";
 import {
   CreateTransactionSchema,
+  getTransactionsQuerySchema,
   TransactionsIdParamsSchema,
   UpdateTransactionSchema,
 } from "./transaction.schema";
 import { transactionService } from "./transaction.service";
 import {
   CreateTransactionInput,
+  GetTransactionsQuery,
   UpdateTransactionInput,
 } from "./transaction.types";
 
@@ -33,10 +35,18 @@ export const transactionRouter = express.Router();
  *         description: Unauthorized
  */
 
-transactionRouter.get("/", async (req: Request, res: Response) => {
-  const result = await transactionService.findTransactionsByUserId(req.userId);
-  res.status(200).json(result);
-});
+transactionRouter.get(
+  "/",
+  validate(getTransactionsQuerySchema, "query"),
+  async (req: Request, res: Response) => {
+    const query = req.validatedQuery as GetTransactionsQuery;
+    const result = await transactionService.findTransactionsByUserId(
+      req.userId,
+      query,
+    );
+    res.status(200).json(result);
+  },
+);
 
 /**
  * @swagger

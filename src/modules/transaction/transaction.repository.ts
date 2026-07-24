@@ -1,6 +1,7 @@
 import { prisma } from "../../config/prisma";
 import {
   CreateTransactionInput,
+  GetTransactionsQuery,
   UpdateTransactionInput,
 } from "./transaction.types";
 
@@ -8,8 +9,25 @@ export const transactionRepository = {
   async findTransactionById(id: number) {
     return prisma.transaction.findUnique({ where: { id } });
   },
-  async findTransactionsByUserId(userId: number) {
-    return prisma.transaction.findMany({ where: { userId } });
+  async findTransactionsByUserId(userId: number, query: GetTransactionsQuery) {
+    const where = {
+      userId,
+      type: query.type,
+      categoryId: query.categoryId,
+      walletId: query.walletId,
+      amount: { gte: query.minAmount, lte: query.maxAmount },
+      createdAt: { gte: query.createdAtFrom, lte: query.createdAtTo },
+    };
+    const [data, total] = await Promise.all([
+      prisma.transaction.findMany({
+        where,
+        skip: (query.page - 1) * query.limit,
+        take: query.limit,
+        orderBy: { [query.sortBy]: query.order },
+      }),
+      prisma.transaction.count({ where }),
+    ]);
+    return { data, total };
   },
   async createTransaction(data: CreateTransactionInput, userId: number) {
     return prisma.$transaction(async (tx) => {
