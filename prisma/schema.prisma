@@ -19,6 +19,7 @@ model User {
   transactions  Transaction[]
   wallets       Wallet[]
   refreshTokens RefreshToken[]
+  budgets       Budget[]
 }
 
 enum CategoryType {
@@ -34,6 +35,7 @@ model Category {
   user   User         @relation(fields: [userId], references: [id])
 
   transactions Transaction[]
+  budgets      Budget[]
 }
 
 enum CurrencyType {
@@ -77,6 +79,18 @@ model Transaction {
   relatedTransactionId Int?         @unique
   relatedTransaction   Transaction? @relation("TransactionPair", fields: [relatedTransactionId], references: [id])
   pairedWith           Transaction? @relation("TransactionPair")
+}
+
+model Budget {
+  id         Int      @id @default(autoincrement())
+  amount     Decimal  @db.Decimal(10, 2)
+  startDate  DateTime
+  endDate    DateTime
+  createdAt  DateTime @default(now())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
 }
 
 model RefreshToken {

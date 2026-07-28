@@ -15,6 +15,7 @@ export const errorHandler = (
         message: issue.message,
       })),
     });
+
     return;
   }
 

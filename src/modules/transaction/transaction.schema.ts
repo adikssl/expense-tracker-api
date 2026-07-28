@@ -13,7 +13,7 @@ export const CreateTransactionSchema = z.object({
   description: z.string().max(500).optional(),
 });
 
-export const TransactionsIdParamsSchema = z.object({
+export const TransactionIdParamsSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
 

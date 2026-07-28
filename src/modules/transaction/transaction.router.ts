@@ -8,7 +8,7 @@ import {
 import {
   CreateTransactionSchema,
   getTransactionsQuerySchema,
-  TransactionsIdParamsSchema,
+  TransactionIdParamsSchema,
   UpdateTransactionSchema,
 } from "./transaction.schema";
 import { transactionService } from "./transaction.service";
@@ -28,6 +28,82 @@ export const transactionRouter = express.Router();
  *     tags: [Transaction]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *           enum: [INCOME, EXPENSE]
+ *         required: false
+ *         description: Filter by transaction type
+ *       - in: query
+ *         name: categoryId
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Filter by category id
+ *       - in: query
+ *         name: walletId
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Filter by wallet id
+ *       - in: query
+ *         name: minAmount
+ *         schema:
+ *           type: number
+ *         required: false
+ *         description: Minimum transaction amount
+ *       - in: query
+ *         name: maxAmount
+ *         schema:
+ *           type: number
+ *         required: false
+ *         description: Maximum transaction amount
+ *       - in: query
+ *         name: createdAtFrom
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Filter transactions created on or after this date
+ *       - in: query
+ *         name: createdAtTo
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Filter transactions created on or before this date
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         required: false
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 20
+ *         required: false
+ *         description: Items per page
+ *       - in: query
+ *         name: sortBy
+ *         schema:
+ *           type: string
+ *           enum: [createdAt, amount]
+ *           default: createdAt
+ *         required: false
+ *         description: Field to sort by
+ *       - in: query
+ *         name: order
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: asc
+ *         required: false
+ *         description: Sort direction
  *     responses:
  *       200:
  *         description: List of user's transactions
@@ -76,7 +152,7 @@ transactionRouter.get(
 
 transactionRouter.get(
   "/:id",
-  validate(TransactionsIdParamsSchema, "params"),
+  validate(TransactionIdParamsSchema, "params"),
   async (req: RequestWithParams<{ id: string }>, res: Response) => {
     const result = await transactionService.findTransactionById(
       +req.params.id,
@@ -183,7 +259,7 @@ transactionRouter.post(
 
 transactionRouter.patch(
   "/:id",
-  validate(TransactionsIdParamsSchema, "params"),
+  validate(TransactionIdParamsSchema, "params"),
   validate(UpdateTransactionSchema, "body"),
   async (
     req: RequestWithParamsAndBody<{ id: string }, UpdateTransactionInput>,
@@ -226,7 +302,7 @@ transactionRouter.patch(
 
 transactionRouter.delete(
   "/:id",
-  validate(TransactionsIdParamsSchema, "params"),
+  validate(TransactionIdParamsSchema, "params"),
   async (req: RequestWithParams<{ id: string }>, res: Response) => {
     await transactionService.deleteTransaction(+req.params.id, req.userId);
     res.status(204).send();

@@ -28,6 +28,14 @@ export const categoryRouter = express.Router();
  *     tags: [Category]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *           enum: [INCOME, EXPENSE]
+ *         required: false
+ *         description: Filter categories by type
  *     responses:
  *       200:
  *         description: List of user's categories
@@ -40,7 +48,6 @@ categoryRouter.get(
   validate(getCategoriesQuerySchema, "query"),
   async (req: Request, res: Response) => {
     const query = req.validatedQuery as GetCategoriesQuery;
-    console.log(typeof query.type, query.type);
     const result = await categoryService.findCategoriesByUserId(
       req.userId,
       query.type,
