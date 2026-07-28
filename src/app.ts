@@ -7,6 +7,7 @@ import { swaggerSpec } from "./config/swagger";
 import { authMiddleware } from "./middleware/auth.middleware";
 import { errorHandler } from "./middleware/errorHandler";
 import { authRouter } from "./modules/auth/auth.router";
+import { budgetRouter } from "./modules/budgets/budget.router";
 import { categoryRouter } from "./modules/category/category.router";
 import { transactionRouter } from "./modules/transaction/transaction.router";
 import { walletRouter } from "./modules/wallet/wallet.router";
@@ -25,6 +26,7 @@ app.use("/auth", authRouter);
 app.use("/wallets", authMiddleware, walletRouter);
 app.use("/categories", authMiddleware, categoryRouter);
 app.use("/transactions", authMiddleware, transactionRouter);
+app.use("/budgets", authMiddleware, budgetRouter);
 app.use(errorHandler);
 
 export default app;
